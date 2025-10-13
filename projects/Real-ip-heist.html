@@ -1,1 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Real IP Heist — Writeup | Beatrice Mutunga</title>
+
+  <!-- Marked (markdown -> HTML) -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+  <!-- Simple styling (dark, readable) -->
+  <style>
+    :root{
+      --bg:#0d1117; --panel:#0f1720; --muted:#9aa5b1; --accent:#f5c542; --link:#58a6ff;
+      --content-width:900px;
+    }
+    html,body{height:100%; margin:0; background:var(--bg); color:#c9d1d9; font-family:Inter,Segoe UI,system-ui,Roboto,"Helvetica Neue",Arial;}
+    .page {
+      max-width: var(--content-width);
+      margin: 36px auto;
+      padding: 28px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-radius:10px;
+      box-shadow: 0 8px 30px rgba(2,6,23,0.6);
+    }
+    header { display:flex; gap:16px; align-items:center; margin-bottom:18px;}
+    .avatar{ width:72px; height:72px; border-radius:50%; border:3px solid var(--accent); object-fit:cover;}
+    h1{font-size:1.6rem; margin:0; color:white;}
+    .meta{ color:var(--muted); font-size:0.95rem; margin-top:6px;}
+    /* rendered markdown styles */
+    .md-content{ margin-top:18px; line-height:1.65; color:var(--muted); }
+    .md-content h2{ color:var(--accent); margin-top:28px; }
+    .md-content h3{ color:#e6edf3; margin-top:20px;}
+    .md-content p{ color: #c9d1d9; }
+    .md-content code{ background:#071021; padding:4px 8px; border-radius:6px; color:#d6deff; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Courier New", monospace; font-size:0.9em;}
+    pre{ background:#071025; padding:12px; border-radius:8px; overflow:auto; color:#d6deff;}
+    a{ color:var(--link); text-decoration:none;}
+    a:hover{text-decoration:underline;}
+    ul{ margin-left:1.1rem; color:#c9d1d9;}
+    blockquote{ border-left:3px solid #2b3946; padding-left:12px; color:#9fb0bf; background: rgba(255,255,255,0.01); padding:8px 12px; border-radius:6px;}
+    .btn-row{ margin-top:14px; display:flex; gap:8px; flex-wrap:wrap;}
+    .btn{ background:transparent; color:var(--accent); border:1px solid rgba(245,197,66,0.15); padding:8px 12px; border-radius:8px; text-decoration:none;}
+    .nav-back{ font-size:0.95rem; color:var(--muted); text-decoration:none; display:inline-flex; gap:8px; align-items:center;}
+    footer { text-align:center; color:var(--muted); margin-top:22px; font-size:0.9rem;}
+    @media (max-width:720px){
+      .page{ margin:20px; padding:18px; }
+      header{ flex-direction:row; gap:12px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="page">
+    <header>
+      <img class="avatar" src="../assets/img/profile.jpg" alt="Beatrice Mutunga">
+      <div>
+        <h1 id="title">Real IP Heist</h1>
+        <div class="meta" id="meta">Technical writeup — reconnaissance • exploitation • post-exploit</div>
+      </div>
+    </header>
+
+    <div class="btn-row">
+      <a class="nav-back" href="../index.html">← Back to portfolio</a>
+      <a class="btn" id="rawLink" href="#" target="_blank">Open raw Markdown</a>
+      <a class="btn" id="githubRepo" href="#" target="_blank">Open GitHub Repo</a>
+    </div>
+
+    <article class="md-content" id="content">
+      <!-- Markdown will be rendered here -->
+      <p style="opacity:.6">Loading writeup…</p>
+    </article>
+
+    <footer>
+      <p>© 2025 Beatrice Mutheu Mutunga • Built with GitHub Pages</p>
+    </footer>
+  </div>
+
+  <script>
+    // path to your markdown file (adjust if your writeups.md is located in a different folder)
+    const mdPath = '../writeups.md'; // <-- change path if needed (example: '../REAL-IP-HEIST/writeups.md' or './writeups.md')
+
+    // link targets: raw markdown & GitHub repo (auto-construct if possible)
+    const rawUrl = window.location.origin + '/' + (mdPath.replace(/^\.\//, '').replace(/^\.\.\//,'')); // works for same-repo relative paths
+    document.getElementById('rawLink').href = mdPath;
+    // optional: set repo link if known
+    document.getElementById('githubRepo').href = 'https://github.com/beatrice-mutunga/REAL-IP-HEIST';
+
+    // Fetch markdown and render using marked
+    fetch(mdPath)
+      .then(resp => {
+        if (!resp.ok) throw new Error('Could not fetch markdown: ' + resp.status);
+        return resp.text();
+      })
+      .then(md => {
+        // Optional: pick title and meta from first lines of markdown
+        try {
+          const firstLine = md.split('\\n').find(l => l.trim().length>0);
+          if (firstLine && firstLine.startsWith('#')) {
+            document.getElementById('title').textContent = firstLine.replace(/^#+/,'').trim();
+          }
+        } catch(e) {/*ignore*/}
+        // Convert markdown to HTML
+        const html = marked.parse(md, { gfm: true, breaks: true });
+        document.getElementById('content').innerHTML = html;
+        // make all external links open in new tab
+        document.querySelectorAll('#content a').forEach(a => {
+          const href = a.getAttribute('href') || '';
+          if (href.startsWith('http')) a.setAttribute('target','_blank');
+        });
+      })
+      .catch(err => {
+        document.getElementById('content').innerHTML = '<p style="color:#ff8b8b">Error loading writeup: ' + err.message + '</p>';
+      });
+  </script>
+</body>
+</html>
 
