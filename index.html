@@ -8,71 +8,82 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
 </head>
 <body>
+  <div class="container">
 
-  <!-- ====== NAVBAR ====== -->
-  <header>
-    <h2 class="logo">Beatrice Mutunga</h2>
-    <nav>
-      <a href="#about">About</a>
-      <a href="#projects">Projects</a>
-      <a href="#contact">Contact</a>
-    </nav>
-  </header>
+    <!-- ===== LEFT SIDEBAR ===== -->
+    <aside class="sidebar">
+      <img src="assets/img/profile.jpg" alt="Beatrice Mutunga" class="profile-pic">
+      <h2>Beatrice Mutunga</h2>
+      <p class="role">Cybersecurity & IT Projects Portfolio</p>
 
-  <!-- ====== HERO SECTION ====== -->
-  <section class="hero" id="home">
-    <div class="hero-content">
-      <img src="assets/img/profile.jpg" alt="Beatrice Mutunga" class="profile-pic" />
-      <h1>Hey, I’m <span>Beatrice Mutunga</span></h1>
-      <p>A cybersecurity enthusiast, network analyst, and POS systems developer passionate about secure technology solutions.</p>
-      <div class="hero-buttons">
-        <a href="#projects" class="btn">View Projects</a>
-        <a href="https://github.com/beaclean2" target="_blank" class="btn outline">GitHub</a>
+      <nav class="nav">
+        <a href="#home">🏠 Home</a>
+        <a href="#projects">🚀 Projects</a>
+        <a href="#writeups">🧠 Writeups</a>
+        <a href="#contact">📩 Contact</a>
+      </nav>
+    </aside>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <main class="content">
+      <section id="home">
+        <h1>👋 Welcome</h1>
+        <p>This is my cybersecurity and IT projects hub — where I share technical writeups, portfolio work, and practical projects in networking, POS systems, and cybersecurity.</p>
+      </section>
+
+      <section id="projects">
+        <h2>🚀 Featured Work</h2>
+        <ul>
+          <li><a href="https://github.com/beaclean2/POS-System" target="_blank">POS System for Clubs & Stores</a> — Web-based POS with reports, MPesa payments, and stock tracking.</li>
+          <li><a href="projects/kioptrix-level1.html" target="_blank">Kioptrix Level 1 Walkthrough</a> — Exploiting misconfigurations in Linux web apps.</li>
+          <li><a href="projects/real-ip-heist.html" target="_blank">Real IP Heist</a> — Practical penetration testing writeup.</li>
+        </ul>
+      </section>
+
+      <section id="writeups">
+        <h2>🧠 Latest Writeups</h2>
+        <p>Check out detailed cybersecurity walkthroughs from HackTheBox and TryHackMe labs:</p>
+        <ul>
+          <li><a href="projects/brute-it.html" target="_blank">Brute It — HTB Machine</a></li>
+          <li><a href="projects/kioptrix-level1.html" target="_blank">Kioptrix Level 1 — Vulnerable VM</a></li>
+        </ul>
+      </section>
+
+      <section id="contact">
+        <h2>📩 Contact</h2>
+        <p>Let’s connect! Reach me at:</p>
+        <ul>
+          <li><a href="mailto:mutungabeatrice5@gmail.com">mutungabeatrice5@gmail.com</a></li>
+          <li><a href="https://github.com/beaclean2" target="_blank">GitHub</a></li>
+          <li><a href="https://linkedin.com/in/beatrice-mutunga" target="_blank">LinkedIn</a></li>
+        </ul>
+      </section>
+    </main>
+
+    <!-- ===== RIGHT SIDEBAR ===== -->
+    <aside class="rightbar">
+      <h3>Recently Updated</h3>
+      <ul>
+        <li><a href="projects/real-ip-heist.html" target="_blank">Real IP Heist</a></li>
+        <li><a href="projects/brute-it.html" target="_blank">Brute It</a></li>
+        <li><a href="projects/kioptrix-level1.html" target="_blank">Kioptrix Level 1</a></li>
+      </ul>
+
+      <h3>Trending Tags</h3>
+      <div class="tags">
+        <span>metasploit</span>
+        <span>linux</span>
+        <span>networking</span>
+        <span>pos</span>
+        <span>mysql</span>
+        <span>hackthebox</span>
       </div>
-    </div>
-  </section>
+    </aside>
 
-  <!-- ====== ABOUT ====== -->
-  <section id="about">
-    <h2>About Me</h2>
-    <p>I’m a cybersecurity and networking student at KCA University and a Network Analyst at Teqworth Systems International. I specialize in ISP billing systems, POS development, and cybersecurity writeups covering penetration testing, defensive setups, and real-world challenges.</p>
-  </section>
-
-  <!-- ====== PROJECTS ====== -->
-  <section id="projects">
-    <h2>Projects & Writeups</h2>
-    <div class="project-grid">
-      <a href="projects/kioptrix-level1.html" class="card">
-        <h3>Kioptrix Level 1 Walkthrough</h3>
-        <p>Penetration testing writeup covering reconnaissance, exploitation, and privilege escalation.</p>
-      </a>
-
-      <a href="https://github.com/beaclean2" class="card">
-        <h3>POS System Development</h3>
-        <p>Web-based POS software for clubs, wine shops, and general stores — includes sales, payments, and reporting.</p>
-      </a>
-
-      <a href="projects/" class="card">
-        <h3>More Writeups</h3>
-        <p>Explore my other cybersecurity challenges, network setups, and learning projects.</p>
-      </a>
-    </div>
-  </section>
-
-  <!-- ====== CONTACT ====== -->
-  <section id="contact">
-    <h2>Contact</h2>
-    <p>Let’s connect — I’m always open to collaborations and opportunities!</p>
-    <div class="socials">
-      <a href="mailto:mutungabeatrice5@gmail.com">📧 Email</a>
-      <a href="https://github.com/beaclean2" target="_blank">💻 GitHub</a>
-      <a href="https://linkedin.com/in/beatrice-mutunga" target="_blank">🔗 LinkedIn</a>
-    </div>
-  </section>
+  </div>
 
   <footer>
-    <p>© 2025 Beatrice Mutunga | Built with ❤️ using GitHub Pages</p>
+    <p>© 2025 Beatrice Mutunga | Built on GitHub Pages</p>
   </footer>
-
 </body>
 </html>
