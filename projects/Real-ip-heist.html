@@ -40,14 +40,14 @@
       <div>
         <h1>Real IP Heist</h1>
         <div class="meta">Exploit of server trusting client-supplied <code class="inline">X-Forwarded-For</code>/<code class="inline">X-Real-IP</code> headers — Admin access & flag</div>
-        <p><img class="md-img" src="https://github.com/beatrice-mutunga/beatrice-mutunga.github.io/blob/main/assets/img/safaricom-real-ip-heist.jpg" alt="Login form screenshot"></p>
+        <p><img class="md-img" src="../assets/img/safaricom-real-ip-heist.jpg" alt="Login form screenshot"></p>
         <div class="meta">Posted Oct 5, 2025 · Updated Oct 5, 2025 · By <strong>Beatrice Mutheu Mutunga</strong> · 2 min read</div>
       </div>
     </header>
 
     <p class="lead"><strong>Exploit of server trusting client-supplied X-Forwarded-For/X-Real-IP headers, obtaining Admin access and the flag.</strong></p>
     <hr>
-    <p><img class="md-img" src="https://github.com/beatrice-mutunga/beatrice-mutunga.github.io/blob/main/assets/img/safaricom-real-ip-heist.jpg" alt="Login form screenshot"></p>
+    <p><img class="md-img" src="../assets/img/safaricom-real-ip-heist.jpg" alt="Login form screenshot"></p>
     <div class="section">
       <h3 class="section-title">Real IP Heist — Challenge Writeup</h3>
 
@@ -72,13 +72,13 @@
         <li><strong>Login button</strong></li>
       </ul>
 
-      <p><img class="md-img" src="https://github.com/beatrice-mutunga/beatrice-mutunga.github.io/blob/main/assets/img/TargetIP.png" alt="Login form screenshot"></p>
+      <p><img class="md-img" src="../assets/img/TargetIP.png" alt="Login form screenshot"></p>
 
       <h5>2. Analyzing Client-Side Restrictions</h5>
       <p>Inspected the page source and network activity using browser DevTools. Found client-side JavaScript setting a fixed <code class="inline">X-Forwarded-For</code> header, limiting users to “User” access regardless of input.</p>
 
-      <p><img class="md-img" src="https://github.com/beatrice-mutunga/beatrice-mutunga.github.io/blob/main/assets/img/View-Page-Source.png" alt="DevTools screenshot"></p>
-      <p><img class="md-img" src="https://github.com/beatrice-mutunga/beatrice-mutunga.github.io/blob/main/assets/img/Source-code.png" alt="Network trace screenshot"></p>
+      <p><img class="md-img" src="../assets/img/View-Page-Source.png" alt="DevTools screenshot"></p>
+      <p><img class="md-img" src="../assets/img/Source-code.png" alt="Network trace screenshot"></p>
 
       <h5>3. Bypassing Client-Side Restrictions</h5>
       <p>The server trusted HTTP headers for IP verification. Client-side restrictions can be bypassed by sending custom requests with spoofed headers (e.g., using <code class="inline">curl</code>).</p>
@@ -113,7 +113,7 @@
 </code></pre>
     </div>
 
-    <p><img class="md-img" src="https://github.com/beatrice-mutunga/beatrice-mutunga.github.io/blob/main/assets/img/Curl.png" alt="DevTools screenshot"></p>
+    <p><img class="md-img" src=".../assets/img/Curl.png" alt="DevTools screenshot"></p>
     
     <div class="section">
       <h4 class="section-title">Vulnerability Analysis</h4>
@@ -131,7 +131,7 @@
     </div>
 
 
-    <p><img class="md-img" src="https://github.com/beatrice-mutunga/beatrice-mutunga.github.io/blob/main/assets/img/Flag.png" alt="DevTools screenshot"></p>
+    <p><img class="md-img" src="../assets/img/Flag.png" alt="DevTools screenshot"></p>
     
     <div class="section">
       <h4 class="section-title">Key Takeaways</h4>
