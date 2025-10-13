@@ -1,118 +1,146 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Lab Challenges | Beatrice Mutunga</title>
-
-  <!-- markdown rendering -->
-  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-
+  <link href="https://fonts.googleapis.com/css2?family=OpenSans:wght@400;600&display=swap" rel="stylesheet" />
   <style>
-    :root{
-      --bg:#0d1117; --panel:#0f1720; --muted:#9aa5b1; --accent:#f5c542; --link:#58a6ff;
-      --card-bg:#0f1620;
+    body {
+      font-family: 'Open Sans', sans-serif;
+      background-color: #f9fafc;
+      color: #333;
+      margin: 0;
+      padding: 0;
+      line-height: 1.6;
     }
-    html,body{height:100%; margin:0; background:var(--bg); color:#c9d1d9; font-family: "Poppins", sans-serif;}
-    header{padding:28px 18px; text-align:center}
-    header h1{margin:0;color:var(--accent)}
-    .container{max-width:1100px;margin:20px auto;padding:0 16px;}
-    .grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(260px,1fr)); gap:18px;}
-    .card{
-      background:var(--card-bg);
-      border-radius:10px;
-      padding:14px;
-      box-shadow: 0 6px 18px rgba(2,6,23,0.6);
-      transition: transform .18s ease, box-shadow .18s;
-      border:1px solid rgba(255,255,255,0.03);
+
+    header {
+      background-color: #0d1b2a;
+      color: #fff;
+      padding: 2rem 1rem;
+      text-align: center;
     }
-    .card:hover{transform:translateY(-4px); box-shadow:0 10px 30px rgba(2,6,23,0.8)}
-    .thumb{width:100%; height:140px; object-fit:cover; border-radius:8px; display:block; margin-bottom:10px;}
-    .meta{font-size:0.9rem; color:var(--muted); margin-bottom:6px}
-    .title{font-weight:600; color:#e6edf3; font-size:1.05rem; margin-bottom:6px}
-    .excerpt{color:#cbd5df; font-size:0.95rem; min-height:48px}
-    .read{display:inline-block;margin-top:10px;padding:8px 12px;border-radius:8px;background:transparent;border:1px solid rgba(245,197,66,0.12);color:var(--accent);text-decoration:none}
-    .search-row{display:flex; gap:8px; margin:16px 0; justify-content:flex-end}
-    .search-row input{background:#061021;border:1px solid #1f2a36;padding:8px 10px;border-radius:8px;color:#c9d1d9}
-    footer{max-width:1100px;margin:36px auto;padding:10px 16px;color:#8b949e;text-align:center}
-    @media (max-width:600px){ .search-row{justify-content:center} }
+
+    header h1 {
+      font-size: 2rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    .lab-card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+      margin-bottom: 2rem;
+      padding: 1.5rem;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .lab-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+    }
+
+    .lab-card h2 {
+      color: #1b263b;
+      margin-bottom: 0.5rem;
+      font-size: 1.4rem;
+    }
+
+    .lab-card h3 {
+      font-size: 1.1rem;
+      color: #415a77;
+      margin-top: 1.2rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .lab-card p {
+      margin: 0.4rem 0;
+    }
+
+    .tools {
+      background: #e0e7ff;
+      padding: 0.8rem;
+      border-radius: 8px;
+      font-size: 0.95rem;
+    }
+
+    .screenshot {
+      margin-top: 1rem;
+      text-align: center;
+    }
+
+    .screenshot img {
+      max-width: 100%;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1.5rem;
+      background: #0d1b2a;
+      color: #fff;
+      margin-top: 3rem;
+    }
   </style>
 </head>
 <body>
   <header>
     <h1>Lab Challenges</h1>
-    <p style="color:var(--muted)">CTF-style writeups, labs and lessons — click a card to read the full writeup.</p>
+    <p>Exploring real-world cybersecurity and CTF problem-solving</p>
   </header>
 
   <div class="container">
-    <div class="search-row">
-      <input id="search" placeholder="Filter by keyword (e.g. 'samba', 'sql', 'network')" />
+
+    <div class="lab-card">
+      <h2>Challenge 1: SQL Injection Discovery</h2>
+      <h3>Problem Statement</h3>
+      <p>Find and exploit a SQL injection vulnerability on a sample login page to retrieve hidden user data.</p>
+
+      <h3>Approach</h3>
+      <p>Tested different input parameters using Burp Suite and manual payloads. Identified a vulnerable POST parameter that revealed database errors.</p>
+
+      <h3>Tools Used</h3>
+      <p class="tools">Burp Suite, SQLMap, Browser DevTools</p>
+
+      <h3>Key Lessons Learned</h3>
+      <p>Gained experience in identifying injection points, crafting payloads, and automating the process with SQLMap.</p>
+
+      <div class="screenshot">
+        <img src="images/sql-injection.png" alt="SQL Injection Challenge Screenshot" />
+      </div>
     </div>
 
-    <div id="grid" class="grid" aria-live="polite">
-      <!-- cards will be injected here -->
+    <div class="lab-card">
+      <h2>Challenge 2: Web Exploitation – File Upload Bypass</h2>
+      <h3>Problem Statement</h3>
+      <p>Bypass a file upload filter to execute a PHP reverse shell.</p>
+
+      <h3>Approach</h3>
+      <p>Analyzed server responses and crafted a disguised PHP payload with image headers. Uploaded using intercepted requests.</p>
+
+      <h3>Tools Used</h3>
+      <p class="tools">Burp Suite, Kali Linux, netcat</p>
+
+      <h3>Key Lessons Learned</h3>
+      <p>Learned about file upload sanitization, MIME-type validation, and how to avoid common web app misconfigurations.</p>
+
+      <div class="screenshot">
+        <img src="images/file-upload-bypass.png" alt="File Upload Challenge Screenshot" />
+      </div>
     </div>
+
   </div>
 
   <footer>
-    © 2025 Beatrice Mutheu Mutunga • <a href="index.html" style="color:var(--link)">Back to portfolio</a>
+    <p>© 2025 Beatrice Mutunga | Lab Challenges</p>
   </footer>
-
-<script>
-(async function(){
-  // path to index.json generated by generator script
-  const indexPath = 'lab-data/index.json';
-
-  // fetch index
-  let resp;
-  try {
-    resp = await fetch(indexPath);
-    if(!resp.ok) throw new Error('Index not found: ' + resp.status);
-  } catch(e) {
-    document.getElementById('grid').innerHTML = '<div style="color:#ff9b9b">Could not load lab index. Make sure <code>lab-data/index.json</code> exists.</div>';
-    console.error(e);
-    return;
-  }
-
-  const index = await resp.json(); // array of entries
-  const grid = document.getElementById('grid');
-
-  function renderCards(list){
-    grid.innerHTML = '';
-    list.forEach(item=>{
-      const thumb = item.thumbnail || 'assets/img/default-thumb.png';
-      const slug = item.slug || item.file.replace(/\.[^/.]+$/,'');
-      const title = item.title || slug;
-      const excerpt = item.excerpt || (item.description || '').slice(0,160);
-      const date = item.date ? `<div class="meta">${item.date}</div>` : '';
-      const card = document.createElement('article');
-      card.className = 'card';
-      card.innerHTML = `
-        <img class="thumb" loading="lazy" src="${thumb}" alt="${title} thumbnail">
-        ${date}
-        <div class="title">${title}</div>
-        <div class="excerpt">${excerpt}</div>
-        <a class="read" href="projects/${slug}.html">Read writeup →</a>
-      `;
-      grid.appendChild(card);
-    });
-  }
-
-  // initial render
-  renderCards(index);
-
-  // search/filter
-  document.getElementById('search').addEventListener('input', e=>{
-    const q = e.target.value.trim().toLowerCase();
-    if(!q) return renderCards(index);
-    const filtered = index.filter(it=>{
-      const fields = (it.title+' '+(it.tags||'')+' '+(it.excerpt||'')+' '+(it.description||'')).toLowerCase();
-      return fields.includes(q);
-    });
-    renderCards(filtered);
-  });
-
-})();
-</script>
 </body>
 </html>
