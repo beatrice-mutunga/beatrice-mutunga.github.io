@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Writeups | Beatrice Mutheu Mutunga</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #0d1117;
+      color: #c9d1d9;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      text-align: center;
+      padding: 2rem 1rem;
+      background-color: #161b22;
+      border-bottom: 1px solid #30363d;
+    }
+    header h1 {
+      margin: 0;
+      color: #58a6ff;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+    .card {
+      background-color: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 12px;
+      overflow: hidden;
+      transition: transform 0.3s ease, border 0.3s ease;
+    }
+    .card:hover {
+      transform: translateY(-6px);
+      border-color: #58a6ff;
+    }
+    .card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+    }
+    .card-content {
+      padding: 1rem;
+    }
+    .card-content h3 {
+      color: #58a6ff;
+      margin-bottom: 0.5rem;
+    }
+    .card-content p {
+      color: #8b949e;
+      font-size: 0.95rem;
+    }
+    .read-more {
+      display: inline-block;
+      margin-top: 0.75rem;
+      color: #58a6ff;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .read-more:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>My Writeups</h1>
+    <p>CTF Challenges • Cybersecurity Labs • Exploit Walkthroughs</p>
+  </header>
+
+  <div class="container">
+
+    <!-- Project 1 -->
+    <div class="card">
+      <img src="https://github.com/user-attachments/assets/18d9b32e-5444-4976-921c-ff059b10b0e4" alt="Kioptrix">
+      <div class="card-content">
+        <h3>Kioptrix Level 1 Walkthrough</h3>
+        <p>Exploiting Samba’s trans2open vulnerability to gain root access. A step-by-step beginner-friendly pentest guide.</p>
+        <a href="kioptrix.html" class="read-more">Read More →</a>
+      </div>
+    </div>
+
+    <!-- Project 2 -->
+    <div class="card">
+      <img src="https://github.com/user-attachments/assets/abc4df29-f869-49ec-a1b0-1668c994ad89" alt="Real IP Heist">
+      <div class="card-content">
+        <h3>Real IP Heist</h3>
+        <p>Writeup documenting network discovery and privilege escalation in a simulated corporate network environment.</p>
+        <a href="real-ip-heist.html" class="read-more">Read More →</a>
+      </div>
+    </div>
+
+    <!-- Add more projects here -->
+    <!-- Example: 
+    <div class="card">
+      <img src="IMAGE_URL" alt="Project Name">
+      <div class="card-content">
+        <h3>Project Name</h3>
+        <p>Short project description...</p>
+        <a href="project-file.html" class="read-more">Read More →</a>
+      </div>
+    </div>
+    -->
+
+  </div>
+
+</body>
+</html>
