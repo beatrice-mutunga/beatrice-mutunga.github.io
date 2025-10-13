@@ -42,7 +42,7 @@
       </div>
     </header>
 
-    <p><img class="md-img" src="https://github.com/beatrice-mutunga/beatrice-mutunga.github.io/blob/main/assets/img/kioptrix-1.jpg" alt="Kioptrix overview"></p>
+    <p><img class="md-img" src="../assets/img/kioptrix-1.jpg" alt="Kioptrix overview"></p>
      
     <p class="lead"><strong>Walkthrough of Kioptrix Level 1 VM penetration test, covering reconnaissance, vulnerability identification, and exploitation via Samba trans2open overflow.</strong></p>
     <hr>
@@ -50,7 +50,7 @@
     <section>
       <h3 class="section-title">Introduction</h3>
       <p>Kioptrix Level 1 is a beginner-friendly vulnerable virtual machine on VulnHub intended for practicing penetration-testing fundamentals. This walkthrough documents enumeration, vulnerability identification, and obtaining root access.</p>
-      <p><img class="md-img" src="https://github.com/beatrice-mutunga/beatrice-mutunga.github.io/blob/main/assets/img/Kioptrix1.png" alt="Kioptrix overview"></p>
+      <p><img class="md-img" src="../assets/img/Kioptrix1.png" alt="Kioptrix overview"></p>
     </section>
 
     <section>
@@ -61,8 +61,8 @@
         <li>Target discovered at: <strong>192.168.56.110</strong>.</li>
         <li>MAC address: <strong>08:00:27:39:c3:0d</strong> (VirtualBox)</li>
       </ul>
-      <p><img class="md-img" src="https://github.com/beatrice-mutunga/beatrice-mutunga.github.io/blob/main/assets/img/netdiscover.png" alt="network screenshot"></p>
-      <p><img class="md-img" src="https://github.com/beatrice-mutunga/beatrice-mutunga.github.io/blob/main/assets/img/arp-scan.png" alt="netdiscover output"></p>
+      <p><img class="md-img" src="../assets/img/netdiscover.png" alt="network screenshot"></p>
+      <p><img class="md-img" src="../assets/img/arp-scan.png" alt="netdiscover output"></p>
       </section>
 
     <section>
@@ -81,7 +81,7 @@
         <li>32768/tcp — status</li>
       </ul>
 
-      <p><img class="md-img" src="https://github.com/beatrice-mutunga/beatrice-mutunga.github.io/blob/main/assets/img/nmap-scan1.png"></p>
+      <p><img class="md-img" src="../assets/img/nmap-scan1.png"></p>
     </section>
 
     <section>
@@ -96,8 +96,8 @@
         <li>Indicators of a PHP file manager/backdoor</li>
       </ul>
 
-      <p><img class="md-img" src="https://github.com/beatrice-mutunga/beatrice-mutunga.github.io/blob/main/assets/img/port-80observe.png" alt="nikto output"></p>
-      <p><img class="md-img" src="https://github.com/beatrice-mutunga/beatrice-mutunga.github.io/blob/main/assets/img/source-page.png" alt="more nikto output"></p>
+      <p><img class="md-img" src="../assets/img/port-80observe.png" alt="nikto output"></p>
+      <p><img class="md-img" src="../assets/img/source-page.png" alt="more nikto output"></p>
 
       <pre><code># Example nikto command used
 nikto -h http://192.168.56.110
@@ -123,12 +123,12 @@ set LPORT 4444
 run
 </code></pre>
 
-      <p><img class="md-img" src="https://github.com/beatrice-mutunga/beatrice-mutunga.github.io/blob/main/assets/img/search-trans2open.png" alt="msfconsole exploit run"></p>
+      <p><img class="md-img" src="../assets/img/search-trans2open.png" alt="msfconsole exploit run"></p>
 
       <p><strong>Result:</strong> The exploit successfully opened reverse shells (sessions observed on ports 32773–32776) and provided a root shell.</p>
 
-      <p><img class="md-img" src="https://github.com/beatrice-mutunga/beatrice-mutunga.github.io/blob/main/assets/img/exploit-options.png" alt="reverse shell output"></p>
-      <p><img class="md-img" src="https://github.com/beatrice-mutunga/beatrice-mutunga.github.io/blob/main/assets/img/hosts-setup.png" alt="root shell screenshot"></p>
+      <p><img class="md-img" src="../assets/img/exploit-options.png" alt="reverse shell output"></p>
+      <p><img class="md-img" src="../assets/img/hosts-setup.png" alt="root shell screenshot"></p>
     </section>
 
     <section>
@@ -140,10 +140,10 @@ hostname    # => kioptrix.level1
 </code></pre>
 
       <p>Found a congratulations message in the system mail for root:</p>
-      <p><img class="md-img" src="https://github.com/beatrice-mutunga/beatrice-mutunga.github.io/blob/main/assets/img/locate-mail.png" alt="system mail screenshot"></p>
+      <p><img class="md-img" src="../assets/img/locate-mail.png" alt="system mail screenshot"></p>
 
       <p>Captured the flag and evidence:</p>
-      <p><img class="md-img" src="https://github.com/beatrice-mutunga/beatrice-mutunga.github.io/blob/main/assets/img/flag%20(1).png" alt="flag screenshot"></p>
+      <p><img class="md-img" src="../assets/img/flag%20(1).png" alt="flag screenshot"></p>
     </section>
 
     <section>
