@@ -46,7 +46,7 @@
     <section class="card">
       <h2>Overview</h2>
       <p>Format for flags: <strong>MD5 hash</strong> (unless specified otherwise). This lab is also suitable for a CTF approach.</p>
-      <p><img class="md-img" src="../assets/img/1.png"></p>
+      <p><img class="md-img" src="../assets/img/1.png"></p><br><br>
       <p><img class="md-img" src="../assets/img/2.png"></p>
       <h3>Scenario</h3>
       <p>It's your first day on the red team, and you've been tasked with examining a website that was found in a phished employee's bookmarks. Check it out and see where it leads! In scope is the company's infrastructure, including cloud services.</p>
@@ -92,19 +92,19 @@
                   https://s3.amazonaws.com/dev.huge-logistics.com/
       </code></pre>
 
-      <p>Both of the directory requests above returned access denied in the browser.</p>
+      <p>Both of the directory requests above returned access denied in the browser.</p><br>
       <p><img class="md-img" src="../assets/img/3.png"></p>
 
       <h3>Use the AWS CLI</h3>
       <p>Install on Debian/Ubuntu:</p>
-      <pre><code>apt install awscli</code></pre>
+      <pre><code>apt install awscli</code></pre><br>
 
       <p><img class="md-img" src="../assets/img/4.png"></p>
 
       <p>Try listing the bucket anonymously (unsigned):</p>
       <pre><code>aws s3 ls s3://dev.huge-logistics.com --no-sign-request</code></pre>
 
-      <p><strong>Note:</strong> the AWS CLI v2 signs requests by default; <code>--no-sign-request</code> forces an unsigned (anonymous) request.</p>
+      <p><strong>Note:</strong> the AWS CLI v2 signs requests by default; <code>--no-sign-request</code> forces an unsigned (anonymous) request.</p><br>
       <p><img class="md-img" src="../assets/img/5.png"></p>
 
       <h3>What the CLI revealed</h3>
@@ -119,13 +119,13 @@
       <p>The <code>shared/</code> directory contained <code>hl_migration_project.zip</code>. Download it:</p>
       <pre><code>aws s3 cp s3://dev.huge-logistics.com/shared/hl_migration_project.zip . --no-sign-request
 unzip hl_migration_project.zip</code></pre>
-      <p><img class="md-img" src="../assets/img/6.png"></p>
-      <p><img class="md-img" src="../assets/img/7.png"></p>
-      <p><img class="md-img" src="../assets/img/8.png"></p>
-      <p><img class="md-img" src="../assets/img/9.png"></p>
-      <p><img class="md-img" src="../assets/img/10.png"></p>
-      <p><img class="md-img" src="../assets/img/11.png"></p>
-      <p><img class="md-img" src="../assets/img/12.png"></p>
+      <p><img class="md-img" src="../assets/img/6.png"></p><br>
+      <p><img class="md-img" src="../assets/img/7.png"></p><br>
+      <p><img class="md-img" src="../assets/img/8.png"></p><br>
+      <p><img class="md-img" src="../assets/img/9.png"></p><br>
+      <p><img class="md-img" src="../assets/img/10.png"></p><br>
+      <p><img class="md-img" src="../assets/img/11.png"></p><br>
+      <p><img class="md-img" src="../assets/img/12.png"></p><br>
 
 
       <p>Inside was a PowerShell migration script containing hardcoded AWS keys and the region <code>us-east-1</code> (useful to know when configuring AWS credentials).</p>
@@ -213,7 +213,7 @@ Write-Output "Batch upload complete!"
   ...
 &lt;/CredentialsExport&gt;</code></pre>
 
-      <p><img class="md-img" src="../assets/img/17.png"></p>
+      <p><img class="md-img" src="../assets/img/17.png"></p><br><br>
       <p><img class="md-img" src="../assets/img/18.png"></p>
       <h3>Using the discovered keys</h3>
       <p>Configure AWS CLI with the leaked key pair:</p>
@@ -221,14 +221,14 @@ Write-Output "Batch upload complete!"
 # then check identity:
 aws sts get-caller-identity</code></pre>
 
-      <p><img class="md-img" src="../assets/img/14.png"></p>
+      <p><img class="md-img" src="../assets/img/14.png"></p><br>
 
       <p>When using the leaked <code>it-admin</code> credentials, the admin folder becomes listable. You might find:</p>
       <pre><code>aws s3 ls s3://dev.huge-logistics.com/admin/
 aws s3 cp s3://dev.huge-logistics.com/admin/website_transactions_export.csv -
 </code></pre>
 
-      <p><img class="md-img" src="../assets/img/15.png"></p>
+      <p><img class="md-img" src="../assets/img/15.png"></p><br><br>
       <p><img class="md-img" src="../assets/img/16.png"></p>
 
       <h3>Why did CLI anonymous list work while the browser failed?</h3>
@@ -254,11 +254,11 @@ aws s3 cp s3://dev.huge-logistics.com/admin/website_transactions_export.csv -
       <p>To list the root in a browser (include parameters):</p>
       <pre><code>https://dev.huge-logistics.com.s3.amazonaws.com/?prefix=&delimiter=/</code></pre>
     </section>
-      <p><img class="md-img" src="../assets/img/19.png"></p>
-    <p><img class="md-img" src="../assets/img/20.png"></p>
-    <p><img class="md-img" src="../assets/img/21.png"></p>
-    <p><img class="md-img" src="../assets/img/23.png"></p>
-    <p><img class="md-img" src="../assets/img/24.png"></p>
+      <p><img class="md-img" src="../assets/img/19.png"></p><br>
+    <p><img class="md-img" src="../assets/img/20.png"></p><br>
+    <p><img class="md-img" src="../assets/img/21.png"></p><br>
+    <p><img class="md-img" src="../assets/img/23.png"></p><br>
+    <p><img class="md-img" src="../assets/img/24.png"></p><br>
 
     <section class="card">
       <h2>Attack path visualization</h2>
@@ -275,7 +275,7 @@ aws s3 cp s3://dev.huge-logistics.com/admin/website_transactions_export.csv -
 
     <section class="card">
       <h2>Flag</h2>
-      <p>Submit the MD5 flag:</p>
+      <p>Submit the MD5 flag:</p><br>
       <p><img class="md-img" src="../assets/img/flag.png"></p>
       <div class="flag">a49f18145568e4d001414ef1415086b8</div>
     </section>
